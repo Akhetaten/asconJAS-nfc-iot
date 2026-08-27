@@ -1,0 +1,101 @@
+#  Logging 
+logFile @//home/akhenaton/Videos/AsconJAS/nodes.log
+logLevel -1
+logLevel 0 
+logLevel 1
+
+# message 
+echo "===================================================="
+echo "  Starting Josemaria's NFC Dual-Node PQC Measurement"
+echo "===================================================="
+
+#  UART Hub for NFC traffic 
+emulation CreateUARTHub "nfchub"
+
+# Akhenaton
+echo "> Creating Akhenaton node..."
+mach create "akhenaton"
+machine LoadPlatformDescription @platforms/boards/stm32f4_discovery.repl
+sysbus LoadELF @/home/akhenaton/Videos/AsconJAS/akhenaton/bin/stm32f4discovery/akhenaton.elf
+
+# Attach NFC UART
+connector Connect sysbus.usart2 nfchub
+showAnalyzer sysbus.usart2
+
+# metrics
+cpu EnableOpcodesCounting true
+
+mach set "akhenaton"                             
+cpu CreateExecutionTracing "akhe_trace" @/home/akhenaton/Videos/AsconJAS/akhenaton_executions.trace PCAndOpcode true true
+cpu EnableProfilerCollapsedStack @/home/akhenaton/Videos/AsconJAS/khenaton_profile.collapsed true
+
+# log
+sysbus LogAllPeripheralsAccess true
+
+echo "      Akhenaton node ready."
+
+# Nefertiti
+echo "> Creating Nefertiti node..."
+mach create "nefertiti"
+machine LoadPlatformDescription @platforms/boards/stm32f4_discovery.repl
+sysbus LoadELF @/home/akhenaton/Videos/AsconJAS/nefertiti/bin/stm32f4discovery/nefertiti.elf
+
+# Attach NFC UART
+connector Connect sysbus.usart2 nfchub
+showAnalyzer sysbus.usart2
+
+#  metrics
+cpu EnableOpcodesCounting true
+mach set "nefertiti"
+cpu CreateExecutionTracing "nef_trace" @/home/akhenaton/Videos/AsconJAS/efertiti_executions.trace PCAndOpcode true true
+cpu EnableProfilerCollapsedStack @/home/akhenaton/Videos/AsconJAS/nefertiti_profile.collapsed true
+
+# E log
+sysbus LogAllPeripheralsAccess true
+
+echo "      Nefertiti node ready."
+
+# Start Simulation
+echo "    Starting Akhenaton node..."
+mach set "akhenaton"
+start
+echo "    Akhenaton node started."
+
+echo "    Starting Nefertiti node..."
+mach set "nefertiti"
+start
+echo "    Nefertiti node started."
+
+# communication
+echo "  Running simulation ..."
+
+# Metrics
+echo " Collecting memory dumps..."
+
+# Akhenaton RAM
+mach set "akhenaton"
+sysbus WhatIsAt 0x20000000 
+dump_file 20000000 40000 "/home/akhenaton/Videos/AsconJAS/akhenaton_ram.bin"
+
+# Nefertiti RAM
+mach set "nefertiti"
+sysbus WhatIsAt 0x20000000 
+dump_file 20000000 40000 "/home/akhenaton/Videos/AsconJAS/nefertiti_ram.bin" 
+
+echo "  Memory dumps saved."
+# Opcode Statistics
+echo  " Collecting opcode counters..."
+sleep 10000
+
+mach set "akhenaton"
+cpu EnableRiscvOpcodesCounting "/home/akhenaton/Videos/AsconJAS/akhenaton_opcodes.txt"
+
+mach set "nefertiti"
+cpu EnableRiscvOpcodesCounting "/home/akhenaton/Videos/AsconJAS/nefertiti_opcodes.txt"
+echo " Opcode counters saved."
+
+# completed
+mach set "akhenaton"
+cpu FlushExecutionTracing
+mach set "nefertiti"
+cpu FlushExecutionTracing

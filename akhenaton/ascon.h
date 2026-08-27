@@ -1,0 +1,19 @@
+#ifndef ASCON_H
+#define ASCON_H
+
+#include <stdint.h>
+#include <stddef.h>
+
+void ascon128a_aead_encrypt(uint8_t *c, size_t *clen,
+                            const uint8_t *m, size_t mlen,
+                            const uint8_t *ad, size_t adlen,
+                            const uint8_t *npub,
+                            const uint8_t *k);
+
+int ascon128a_aead_decrypt(uint8_t *m, size_t *mlen,
+                            const uint8_t *c, size_t clen,
+                            const uint8_t *ad, size_t adlen,
+                            const uint8_t *npub,
+                            const uint8_t *k);
+
+#endif

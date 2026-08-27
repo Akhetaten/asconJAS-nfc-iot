@@ -1,0 +1,49 @@
+# Git
+.git/
+
+# Python virtual environment
+venv/
+.venv/
+env/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+
+# Build output
+bin/
+build/
+obj/
+
+# C/C++ compiled files
+*.o
+*.a
+*.so
+*.elf
+*.bin
+*.map
+*.d
+
+# Temporary files
+*.tmp
+*.temp
+*.swp
+*~
+
+# Logs
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE files
+.vscode/
+.idea/
+
+# Python generated output
+.pytest_cache/
+
+# Large generated analysis files
+*.prof

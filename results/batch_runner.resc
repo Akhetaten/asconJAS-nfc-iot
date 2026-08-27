@@ -1,0 +1,9 @@
+$i = 4 # example message sizes to test: 8B, 16B, 32B, 64B
+:loop
+    include @start_experiment.resc
+    cpu EnableProfilerCollapsedStack true
+    sleep 5000
+    runMacro "loopForever"
+    memdump 0x20000000 0x20002000 "run_$i.bin"
+    $i = $i * 2
+if $i <= 64 goto loop
