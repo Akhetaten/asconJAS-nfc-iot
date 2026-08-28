@@ -50,3 +50,9 @@ Thumbs.db
 
 # Nested external repository
 results/go_gunzip/
+
+# Compiled Ascon benchmark executables
+akhenaton/asconopt/ascon_opt
+akhenaton/asconopt/ascon_table
+nefertiti/asconopt/ascon_opt
+nefertiti/asconopt/ascon_table
