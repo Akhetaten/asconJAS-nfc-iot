@@ -1,4 +1,4 @@
-# Ascon-NFC-IoT
+# AsconJAS-NFC-IoT
 
 Research repository containing the source code and experimental
 materials for the evaluation of lightweight authenticated
