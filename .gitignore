@@ -47,3 +47,6 @@ Thumbs.db
 
 # Large generated analysis files
 *.prof
+
+# Nested external repository
+results/go_gunzip/
